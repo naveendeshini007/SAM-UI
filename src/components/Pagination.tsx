@@ -8,8 +8,7 @@
  */
 
 import type { PaginationProps } from "../types/Interfaces";
-
-const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+import { DEFAULT_PAGE_SIZE_OPTIONS } from "../constants/Pagination";
 
 export default function Pagination({
   pageSize,
