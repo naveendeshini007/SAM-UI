@@ -20,6 +20,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import LoginPage from "../pages/LoginPage";
 import Home from "../pages/Home";
+import SamDownloadPage from "../pages/SamDataDownload";
 import DashboardPage from "../pages/DashboardPage";
 import { ProtectedRoute, AdminRoute } from "../components/ProtectedRoute";
 
@@ -32,6 +33,7 @@ export default function AppRoutes() {
       {/* Protected: any authenticated user */}
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
+        <Route path="/sam-download" element={<SamDownloadPage />} />
       </Route>
 
       {/* Admin only */}
