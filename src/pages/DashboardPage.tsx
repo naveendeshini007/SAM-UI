@@ -18,7 +18,7 @@ import { useAuth } from "../context/AuthContext";
 import { useLoader } from "../context/LoaderContext";
 import CreateUserForm from "../components/CreateUserForm";
 import ChangePasswordForm from "../components/ChangePasswordForm";
-import Pagination from "../components/PaginationOld";
+import Pagination from "../components/NewPagination";
 import { listUsers, getAuthEvents, deleteUser } from "../services/userService";
 import type { UserRecord, AuthEvent } from "../types/Interfaces";
 
