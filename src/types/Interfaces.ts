@@ -99,7 +99,6 @@ export interface ChangePasswordFormProps {
 
 
 export interface CreateUserFormProps {
-  /** Called after a user is successfully created */
   onUserCreated?: () => void;
 }
 
@@ -123,3 +122,17 @@ export interface PaginationProps {
   onPageSizeChange: (size: number) => void;
   pageSizeOptions?: number[];
 }
+export interface SamApiResponse {
+  message: string;
+  data: {
+    file_date: string;
+    zip_path: string;
+    dat_path: string;
+    status: string;
+  };
+};
+
+export interface Month {
+  label: string;
+  value: number;
+};
