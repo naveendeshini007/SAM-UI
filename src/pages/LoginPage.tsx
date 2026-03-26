@@ -89,8 +89,16 @@ export default function LoginPage() {
     }
   };
 
-  const handleFirstLoginSuccess = () => {
-    navigate("/login", { replace: true });
+  const handleFirstLoginSuccess = async (newPassword: string) => {
+    showLoader("Signing in…");
+    try {
+      await login(pendingUsername, newPassword);
+      navigate("/", { replace: true });
+    } catch {
+      navigate("/login", { replace: true });
+    } finally {
+      hideLoader();
+    }
   };
 
   if (showChangePassword) {

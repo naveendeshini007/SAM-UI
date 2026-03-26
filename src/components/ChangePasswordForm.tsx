@@ -78,7 +78,7 @@ export default function ChangePasswordForm({
           new_password: data.newPassword,
         });
         if (onFirstLoginSuccess) {
-          onFirstLoginSuccess();
+          onFirstLoginSuccess(data.newPassword);
         }
       } else {
         await changePassword({
