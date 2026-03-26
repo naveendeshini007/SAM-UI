@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { downloadSamData } from "../services/SamDownloadService";
-import type { SamApiResponse } from "../services/SamDownloadService";
-
 import { ToastContainer, toast } from "react-toastify";
+import type { SamApiResponse, Month} from "../types/Interfaces";
 import "react-toastify/dist/ReactToastify.css";
+import { allMonths } from "../constants/months";
+import "../styles/SamDataDownload.css";
 
-type Month = {
-  label: string;
-  value: number;
-};
 
 const getLatestSamDate = () => {
   const today = new Date();
@@ -47,24 +44,9 @@ const SamDownloadPage: React.FC = () => {
   const [data, setData] = useState<SamApiResponse | null>(null);
 
   const years: number[] = [];
-  for (let y = latest.year; y >= 2018; y--) {
+  for (let y = latest.year; y >= 2021; y--) {
     years.push(y);
   }
-
-  const allMonths: Month[] = [
-    { label: "January", value: 1 },
-    { label: "February", value: 2 },
-    { label: "March", value: 3 },
-    { label: "April", value: 4 },
-    { label: "May", value: 5 },
-    { label: "June", value: 6 },
-    { label: "July", value: 7 },
-    { label: "August", value: 8 },
-    { label: "September", value: 9 },
-    { label: "October", value: 10 },
-    { label: "November", value: 11 },
-    { label: "December", value: 12 },
-  ];
 
   useEffect(() => {
     if (year === latest.year) {
@@ -112,22 +94,22 @@ const SamDownloadPage: React.FC = () => {
   };
 
   return (
-    <div style={styles.page}>
+    <div className="page">
       <ToastContainer position="top-right" />
 
-      <div style={styles.card}>
-        <h2 style={styles.title}>SAM Data</h2>
-        <p style={styles.subtitle}>
+      <div className="card">
+        <h2 className="title">SAM Data</h2>
+        <p className="subtitle">
           Download and extract SAM.gov monthly data
         </p>
 
         {/* Year */}
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Year</label>
+        <div className="inputGroup">
+          <label className="label">Year</label>
           <select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
-            style={styles.select}
+            className="select"
           >
             {years.map((y) => (
               <option key={y} value={y}>
@@ -138,12 +120,12 @@ const SamDownloadPage: React.FC = () => {
         </div>
 
         {/* Month */}
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Month</label>
+        <div className="inputGroup">
+          <label className="label">Month</label>
           <select
             value={month}
             onChange={(e) => setMonth(Number(e.target.value))}
-            style={styles.select}
+            className="select"
           >
             {availableMonths.map((m) => (
               <option key={m.value} value={m.value}>
@@ -156,7 +138,7 @@ const SamDownloadPage: React.FC = () => {
         {/* Button */}
         <button
           onClick={handleDownload}
-          style={styles.button}
+          className="button"
           disabled={loading}
         >
           {loading ? "Processing..." : "Download & Extract"}
@@ -167,56 +149,3 @@ const SamDownloadPage: React.FC = () => {
 };
 
 export default SamDownloadPage;
-
-const styles: { [key: string]: React.CSSProperties } = {
-  page: {
-    height: "100vh",
-    background: "linear-gradient(to right, #eef2ff, #f8fafc)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  card: {
-    width: "420px",
-    background: "#ffffff",
-    padding: "30px",
-    borderRadius: "14px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-  },
-  title: {
-    textAlign: "center",
-    color: "#1e40af",
-    marginBottom: "5px",
-  },
-  subtitle: {
-    textAlign: "center",
-    fontSize: "14px",
-    color: "#64748b",
-    marginBottom: "20px",
-  },
-  inputGroup: {
-    marginBottom: "15px",
-  },
-  label: {
-    display: "block",
-    fontWeight: 500,
-    marginBottom: "5px",
-  },
-  select: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid #cbd5f5",
-  },
-  button: {
-    width: "100%",
-    padding: "12px",
-    backgroundColor: "#2563eb",
-    color: "#fff",
-    border: "none",
-    borderRadius: "8px",
-    fontWeight: 600,
-    cursor: "pointer",
-    marginTop: "10px",
-  },
-};

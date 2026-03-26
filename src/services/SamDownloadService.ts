@@ -1,14 +1,5 @@
 import axios from "axios";
-
-export type SamApiResponse = {
-  message: string;
-  data: {
-    file_date: string;
-    zip_path: string;
-    dat_path: string;
-    status: string;
-  };
-};
+import type { SamApiResponse} from "../types/Interfaces";
 
 
 export const downloadSamData = async (
