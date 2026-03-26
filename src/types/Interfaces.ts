@@ -93,7 +93,7 @@ export interface AuthContextValue {
 export interface ChangePasswordFormProps {
   mode: "first-login" | "authenticated";
   usernameOrEmail?: string;
-  onFirstLoginSuccess?: () => void;
+  onFirstLoginSuccess?: (newPassword: string) => void;
   onSuccess?: () => void;
 }
 
@@ -101,4 +101,25 @@ export interface ChangePasswordFormProps {
 export interface CreateUserFormProps {
   /** Called after a user is successfully created */
   onUserCreated?: () => void;
+}
+
+export interface ListUsersParams {
+  limit: number;
+  offset: number;
+  search_query?: string;
+}
+
+export interface ListEventsParams {
+  limit: number;
+  offset: number;
+  search_query?: string;
+}
+
+export interface PaginationProps {
+  pageSize: number;
+  currentCount: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+  pageSizeOptions?: number[];
 }

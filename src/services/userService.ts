@@ -18,6 +18,8 @@ import type {
   CreateUserResponse,
   UserRecord,
   AuthEvent,
+  ListUsersParams,
+  ListEventsParams,
 } from "../types/Interfaces";
 
 
@@ -31,8 +33,14 @@ export async function createUser(
   return data;
 }
 
-export async function listUsers(): Promise<UserRecord[]> {
-  const { data } = await apiClient.get<UserRecord[]>(USER_ENDPOINTS.LIST);
+export async function listUsers(params: ListUsersParams): Promise<UserRecord[]> {
+  const { data } = await apiClient.get<UserRecord[]>(USER_ENDPOINTS.LIST, {
+    params: {
+      limit: params.limit,
+      offset: params.offset,
+      ...(params.search_query ? { search_query: params.search_query } : {}),
+    },
+  });
   return data;
 }
 
@@ -50,7 +58,13 @@ export async function deleteUser(userId: string): Promise<{ ok: boolean }> {
   return data;
 }
 
-export async function getAuthEvents(): Promise<AuthEvent[]> {
-  const { data } = await apiClient.get<AuthEvent[]>(USER_ENDPOINTS.AUTH_EVENTS);
+export async function getAuthEvents(params: ListEventsParams): Promise<AuthEvent[]> {
+  const { data } = await apiClient.get<AuthEvent[]>(USER_ENDPOINTS.AUTH_EVENTS, {
+    params: {
+      limit: params.limit,
+      offset: params.offset,
+      ...(params.search_query ? { search_query: params.search_query } : {}),
+    },
+  });
   return data;
 }
