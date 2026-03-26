@@ -40,11 +40,54 @@ VITE_API_BASE_URL=http://localhost:8000/api/v1
 
 ---
 
-## ▶️ Running the App
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+```
+
+### 2. Install Dependencies
 
 ```bash
 npm install
+```
+
+### 3. Start the Development Server
+
+```bash
 npm run dev
+```
+
+### Note: Run 'npm run' for multiple options
+
+## Unit Tesing
+
+### 1. Running Test
+
+```bash
+npm vitest run
+```
+
+### 2. Run Test in Watch mode
+
+```bash
+npm vitest
+```
+
+### 3. Run Test in UI mode
+
+```bash
+npm vitest --ui
+```
+
+### 4. For Code Coverage
+
+```bash
+npm vitest run --coverage
 ```
 
 App runs on:
