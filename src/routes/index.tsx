@@ -22,6 +22,8 @@ import LoginPage from "../pages/LoginPage";
 import Home from "../pages/Home";
 import SamDownloadPage from "../pages/SamDataDownload";
 import DashboardPage from "../pages/DashboardPage";
+import Organizations from "../pages/Organizations";
+import OrganizationDetails from "../pages/OrganizationDetails";
 import { ProtectedRoute, AdminRoute } from "../components/ProtectedRoute";
 
 export default function AppRoutes() {
@@ -29,6 +31,8 @@ export default function AppRoutes() {
     <Routes>
       {/* Public */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/organizations" element={<Organizations />} />
+      <Route path="/organizations/:id" element={<OrganizationDetails />} />
 
       {/* Protected: any authenticated user */}
       <Route element={<ProtectedRoute />}>
