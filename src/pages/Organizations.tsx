@@ -162,7 +162,7 @@ export default function Organizations() {
             </div>
             <input
               type="search"
-              placeholder="Search by name, DUNS, city, or state…"
+              placeholder="Search by name, DUNS…"
               className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium text-gray-700 placeholder:text-gray-300"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}

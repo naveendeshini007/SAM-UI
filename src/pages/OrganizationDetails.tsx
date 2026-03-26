@@ -2,61 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Sidebar } from '../components/SideBar';
 import { TopBar } from '../components/TopBar';
-import { DetailCard, groupFieldsIntoSections } from '../components/DetailCard';
+import { DynamicDetailAccordion } from '../components/DataAccordion';
 import { DownloadButton } from '../components/DownloadButton';
-import { fetchOrganizationById } from '../services/organizationService';
+import { downloadOrganization, fetchOrganizationById } from '../services/organizationService';
 import type { OrganizationDetail, DownloadFormat } from '../types/Interfaces';
+import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
 
-
-const SECTION_MAP: Array<{ title: string; keys: string[] }> = [
-    {
-        title: 'Basic Information',
-        keys: ['organization_name', 'legal_business_name', 'division_name', 'duns_number'],
-    },
-    {
-        title: 'Address',
-        keys: ['address_line1', 'address_line2', 'city', 'state', 'zip_code', 'country'],
-    },
-    {
-        title: 'Registration',
-        keys: ['status_code', 'registration_date', 'expiration_date'],
-    },
-    {
-        title: 'Contact & Web',
-        keys: ['website'],
-    },
-];
 
 const LoadingState: React.FC = () => (
-    <div className="max-w-5xl space-y-5 animate-pulse">
-        <div className="h-9 bg-gray-200 rounded-xl w-72" />
-        <div className="h-4 bg-gray-100 rounded-lg w-44" />
-        {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-white p-8 rounded-2xl border border-gray-100">
-                <div className="h-3 bg-gray-100 rounded w-32 mb-8" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {Array.from({ length: 3 }).map((_, j) => (
-                        <div key={j} className="space-y-2">
-                            <div className="h-2 bg-gray-100 rounded w-20" />
-                            <div className="h-5 bg-gray-200 rounded w-36" />
-                        </div>
-                    ))}
-                </div>
+    <div className="w-full space-y-6 animate-pulse px-8">
+        <div className="flex justify-between items-center">
+            <div className="space-y-3">
+                <div className="h-10 bg-slate-200 rounded-xl w-96" />
+                <div className="h-4 bg-slate-100 rounded-lg w-48" />
             </div>
-        ))}
+            <div className="h-12 bg-slate-200 rounded-xl w-32" />
+        </div>
+        <div className="space-y-4">
+            {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-16 bg-white border border-slate-100 rounded-xl w-full" />
+            ))}
+        </div>
     </div>
 );
 
 const ErrorState: React.FC<{ message: string; onRetry: () => void }> = ({ message, onRetry }) => (
-    <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center border border-red-100">
-            <svg className="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+    <div className="flex flex-col items-center justify-center py-32 gap-6">
+        <div className="p-4 bg-red-50 rounded-full border border-red-100">
+            <AlertCircle className="w-10 h-10 text-red-500" />
         </div>
-        <p className="text-base font-bold text-gray-700">{message}</p>
-        <button onClick={onRetry} className="text-sm font-bold text-blue-600 hover:underline">
-            Try again
+        <div className="text-center">
+            <h3 className="text-xl font-bold text-slate-900">Unable to load record</h3>
+            <p className="text-slate-500 mt-1">{message}</p>
+        </div>
+        <button
+            onClick={onRetry}
+            className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95"
+        >
+            Try Again
         </button>
     </div>
 );
@@ -67,6 +50,7 @@ export default function OrganizationDetails() {
     const [data, setData] = useState<OrganizationDetail | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const loadDetails = async () => {
         if (!id) return;
@@ -84,19 +68,22 @@ export default function OrganizationDetails() {
 
     useEffect(() => { loadDetails(); }, [id]);
 
-    const handleDownload = (format: DownloadFormat) => {
-        // TODO: call export endpoint
-        console.log(`Export ${format} for record: ${id}`);
+    const handleDownload = async (format: DownloadFormat) => {
+        if (!id) return;
+        try {
+            setIsDownloading(true);
+            await downloadOrganization(id, format);
+        } catch (err) {
+            alert("Failed to generate download. Please try again.");
+        } finally {
+            setIsDownloading(false);
+        }
     };
-
-    const sections = data
-        ? groupFieldsIntoSections(data as unknown as Record<string, unknown>, SECTION_MAP)
-        : [];
 
     const orgTitle = data?.organization_name ?? `Organization ${id}`;
 
     return (
-        <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+        <div className="flex h-screen bg-[#F8FAFC] overflow-hidden font-sans">
             <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
             <main className="flex-1 flex flex-col overflow-hidden min-w-0">
@@ -106,17 +93,16 @@ export default function OrganizationDetails() {
                     userRole="User"
                 />
 
-                <div className="flex-1 overflow-y-auto px-5 py-6 lg:px-10 lg:py-8">
-                    {/* Back link */}
-                    <div className="flex justify-start mb-6">
+                <div className="flex-1 overflow-y-auto px-8 py-10">
+
+                    {/* 1. Back Link */}
+                    <div className="flex justify-start mb-8">
                         <Link
                             to="/organizations"
-                            className="inline-flex items-center gap-1.5 text-blue-600 font-bold text-xs -ml-3 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-all"
+                            className="group inline-flex items-center gap-2 text-slate-400 hover:text-blue-600 font-bold text-[10px] tracking-[0.2em] transition-all -ml-1"
                         >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7" />
-                            </svg>
-                            BACK TO ORGANIZATIONS
+                            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
+                            BACK TO DIRECTORY
                         </Link>
                     </div>
 
@@ -125,34 +111,42 @@ export default function OrganizationDetails() {
                     ) : error ? (
                         <ErrorState message={error} onRetry={loadDetails} />
                     ) : data ? (
-                        <div className="max-w-5xl space-y-6">
-                            {/* Page Header */}
-                            <div className="flex items-center justify-between gap-4 mb-2">
-                                <h1 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                                    {String(orgTitle)}
-                                </h1>
-                                <div className="shrink-0">
+                        <div className="w-full space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700">
+
+                            {/* 2. Hero Row: Title + Download in one line */}
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                <div className="space-y-2">
+                                    <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                                        {orgTitle}
+                                    </h1>
+                                </div>
+
+                                <div className="flex items-center gap-5 shrink-0">
+                                    {isDownloading && (
+                                        <div className="flex items-center gap-2 text-blue-600 text-[10px] font-black tracking-widest">
+                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                            PREPARING...
+                                        </div>
+                                    )}
                                     <DownloadButton onDownload={handleDownload} />
                                 </div>
                             </div>
 
-                            {/* Dynamic detail cards */}
-                            {sections.map((section) => (
-                                <DetailCard key={section.title} section={section} />
-                            ))}
+                            {/* 3. Dynamic Accordion Content */}
+                            <div className="w-full">
+                                <DynamicDetailAccordion data={data} />
+                            </div>
 
-                            {sections.length === 0 && (
-                                <div className="bg-white p-12 rounded-2xl border border-gray-100 text-center">
-                                    <p className="text-sm font-semibold text-gray-400">
-                                        No details available for this organization.
-                                    </p>
-                                </div>
-                            )}
-
+                            {/* Simple Footer */}
+                            <footer className="pt-12 border-t border-slate-100">
+                                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.25em]">
+                                    Last Synchronized: {new Date().toLocaleDateString()}
+                                </p>
+                            </footer>
                         </div>
                     ) : null}
                 </div>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }
