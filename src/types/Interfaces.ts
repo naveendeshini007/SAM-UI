@@ -1,55 +1,64 @@
-// src/types/Interfaces.ts
-
-export interface User {
-    id: string;
-    email: string;
-    role: 'admin' | 'user';
-    name: string;
-}
-
-export interface AuthResponse {
-    token: string;
-    user: User;
-}
-
-// src/types/Interfaces.ts
-
-export interface TableHeader {
-  table_header_id: number;
-  table_name: string;
-  column_name: string;
+export interface ColumnDefinition {
+  column_name:  string;
   display_name: string;
-  order: number;
-  is_visible: boolean;
+  order:        number;
+  is_visible:   boolean;
 }
 
 export interface TableHeadersResponse {
   table_name: string;
-  columns: TableHeader[];
+  columns:    ColumnDefinition[];
 }
 
-// src/types/Interfaces.ts
-
-export interface Organization {
-  // We specify that the value can be a string, number, boolean, or null.
-  // This satisfies the linter while still remaining flexible.
-  [key: string]: string | number | boolean | null | undefined;
-}
-
-// src/types/Interfaces.ts
-
-// ... (keep your existing interfaces)
+export type TableHeader = ColumnDefinition;
 
 export interface FilterParams {
   state: string;
-  city: string;
-  year: string;
+  city:  string;
+  year:  string;
   month: string;
 }
 
-export interface OrganizationDetail extends Organization {
-  id: string;
-  country: string;
-  registration_date: string;
-  last_updated: string;
+export interface PaginationParams {
+  page:  number;
+  limit: number;
 }
+
+export interface PaginatedResponse<T> {
+  total:       number;
+  page:        number;
+  limit:       number;
+  total_pages: number;
+  data:        T[];
+}
+
+export interface Organization {
+  record_id:         string;
+  organization_name: string | null;
+  duns_number:       string | null;
+  status_code:       string | null;
+  city:              string | null;
+  state:             string | null;
+  country:           string | null;
+  registration_date: string | null;
+}
+
+export interface OrganizationDetail {
+  record_id:          string;
+  duns_number:        string | null;
+  organization_name:  string | null;
+  status_code:        string | null;
+  legal_business_name: string | null;
+  division_name:      string | null;
+  address_line1:      string | null;
+  address_line2:      string | null;
+  city:               string | null;
+  state:              string | null;
+  zip_code:           string | null;
+  country:            string | null;
+  registration_date:  string | null;
+  expiration_date:    string | null;
+  website:            string | null;
+}
+
+export type DownloadFormat = 'csv' | 'excel';
