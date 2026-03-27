@@ -1,4 +1,5 @@
 import React from 'react';
+import UserDropdown from './UserDropDown';
 
 interface TopBarProps {
   onMenuClick: () => void;
@@ -32,14 +33,8 @@ export const TopBar: React.FC<TopBarProps> = ({
     </button>
 
     {/* Right: user info */}
-    <div className="ml-auto flex items-center gap-3">
-      <div className="text-right">
-        <p className="text-sm font-bold text-gray-900 leading-none">{userName}</p>
-        <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold mt-0.5">{userRole}</p>
-      </div>
-      <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white flex items-center justify-center text-sm font-black shadow-md shadow-blue-200 ring-2 ring-white">
-        {getInitials(userName)}
-      </div>
+    <div className="ml-auto">
+      <UserDropdown />
     </div>
   </header>
 );

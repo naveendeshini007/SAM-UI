@@ -1,13 +1,20 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
+
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  // optional handler so parent pages can swap content without navigating
+  onSelect?: (section: 'organizations' | 'admin') => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onSelect }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+
 
   return (
     <>
@@ -48,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
         {/* Nav */}
         <nav className="flex-1 mt-6 px-3 space-y-1 overflow-y-auto">
-          <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] px-3 mb-3">Navigation</p>
+          {/* <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] px-3 mb-3">Navigation</p> */}
           <NavItem
             icon={
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,12 +63,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </svg>
             }
             label="Organizations"
-            isActive
+            isActive={location.pathname.startsWith('/organizations')}
+            onClick={() => {
+              if (onSelect) return onSelect('organizations');
+              navigate('/organizations');
+            }}
           />
+          {user?.is_admin && (
+          <NavItem
+            icon={
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2l2 4 4 .5-3 2 1 4-4-2-4 2 1-4-3-2 4-.5L12 2z" />
+              </svg>
+            }
+            label="Admin Dashboard"
+            isActive={location.pathname === '/dashboard'}
+            onClick={() => {
+              if (onSelect) return onSelect('admin');
+              navigate('/dashboard');
+            }}
+          />
+            )}
+
+
         </nav>
 
         {/* Footer */}
-        <div className="shrink-0 p-3 border-t border-slate-800">
+        {/* <div className="shrink-0 p-3 border-t border-slate-800">
           <button
             onClick={() => navigate('/login')}
             className="flex items-center gap-3 w-full px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all text-sm font-semibold"
@@ -71,7 +99,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </svg>
             Logout
           </button>
-        </div>
+        </div> */}
       </aside>
     </>
   );
