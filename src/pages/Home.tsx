@@ -95,8 +95,8 @@ export default function Organizations() {
   const [page, setPage] = useState(INITIAL_PAGE);
   const [limit, setLimit] = useState(INITIAL_LIMIT);
 
-  const { showLoader, hideLoader } = useLoader();
-  const { user, logout } = useAuth();
+  // const { showLoader, hideLoader } = useLoader();
+  // const { user, logout } = useAuth();
 
 
   
