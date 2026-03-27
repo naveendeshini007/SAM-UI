@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig, isAxiosError } from 'axios';
+import { getAccessToken } from './axiosInstance';
 
 
 export class ApiError extends Error {
@@ -17,13 +18,16 @@ export class ApiError extends Error {
 // ─── Axios instance ───────────────────────────────────────────────────────────
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  // Empty baseURL — all requests are relative so the Vite dev proxy handles routing.
+  // In production, set VITE_API_BASE_URL if the org API lives on a different origin.
+  baseURL: import.meta.env.VITE_API_BASE_URL || '',
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach token on every request
+// Attach the in-memory access token (same token used by axiosInstance / AuthContext).
+// Never reads from localStorage — tokens are kept in React state only.
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = getAccessToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

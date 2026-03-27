@@ -35,6 +35,12 @@ export const apiClient = axios.create({
 let _getToken: () => string | null = () => null;
 let _setToken: (token: string | null) => void = () => {};
 let _appReady = false;
+
+/** Read the current in-memory access token from anywhere in the app. */
+export function getAccessToken(): string | null {
+  return _getToken();
+}
+
 export function injectTokenAccessor(
   getter: () => string | null,
   setter: (token: string | null) => void

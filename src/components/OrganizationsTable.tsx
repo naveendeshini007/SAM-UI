@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StatusBadge } from './StatusBadge';
-import { Pagination } from './Pagination';
+import { Pagination } from './PaginationOld';
 import type { TableHeader, Organization } from '../types/Interfaces';
 
 interface OrganizationsTableProps {

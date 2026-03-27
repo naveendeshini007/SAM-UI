@@ -6,13 +6,22 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // All requests starting with /api are forwarded to the FastAPI backend.
-      // The browser sees them as same-origin (localhost:5173/api/...)
-      // so CORS is never triggered — even with withCredentials: true.
+      // Auth + user management API (FastAPI at :8000)
       '/api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
-        // Cookies set by the backend (e.g. refresh_token) are forwarded correctly
+        secure: false,
+      },
+      // Organizations / SAM data API (FastAPI at :8000)
+      '/sam-data': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+      // Dynamic table-header metadata endpoint
+      '/table-headers': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
         secure: false,
       },
     },
