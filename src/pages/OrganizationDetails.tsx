@@ -98,7 +98,7 @@ export default function OrganizationDetails() {
                     {/* 1. Back Link */}
                     <div className="flex justify-start mb-8">
                         <Link
-                            to="/organizations"
+                            to="/"
                             className="group inline-flex items-center gap-2 text-slate-400 hover:text-blue-600 font-bold text-[10px] tracking-[0.2em] transition-all -ml-1"
                         >
                             <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
