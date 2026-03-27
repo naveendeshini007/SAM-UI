@@ -16,11 +16,12 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 import { useLoader } from "../context/LoaderContext";
-import CreateUserForm from "../components/CreateUserForm";
+// import CreateUserForm from "../components/CreateUserForm";
 import ChangePasswordForm from "../components/ChangePasswordForm";
 import Pagination from "../components/NewPagination";
 import { listUsers, getAuthEvents, deleteUser } from "../services/userService";
 import type { UserRecord, AuthEvent } from "../types/Interfaces";
+import NewUserButton  from "../components/NewUserButton";
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -170,8 +171,13 @@ export default function DashboardPage() {
     }
   };
 
+  // const handleUserCreated = async () => {
+  //   setShowCreateUser(false);
+  //   await fetchUsers(userPage, userPageSize, userSearch, false);
+  // };
   const handleUserCreated = async () => {
-    setShowCreateUser(false);
+    // The modal handles its own open/close state.
+    // Just silently refresh the users list.
     await fetchUsers(userPage, userPageSize, userSearch, false);
   };
 
@@ -182,7 +188,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ---- Top nav ---- */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      {/* <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-lg font-bold text-gray-900">SAM Admin</span>
@@ -214,7 +220,7 @@ export default function DashboardPage() {
             </button>
           </div>
         </div>
-      </header>
+      </header> */}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
@@ -256,7 +262,7 @@ export default function DashboardPage() {
         </div>
 
         {/* ---- Create User ---- */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        {/* <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-gray-800">Create New User</h2>
             <button
@@ -270,7 +276,9 @@ export default function DashboardPage() {
           {showCreateUser && (
             <CreateUserForm onUserCreated={handleUserCreated} />
           )}
-        </div>
+        </div> */}
+
+        <NewUserButton onUserCreated={handleUserCreated} />
 
         {/* ---- Tabs: Users | Events ---- */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200">

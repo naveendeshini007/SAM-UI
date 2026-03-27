@@ -94,7 +94,8 @@ apiClient.interceptors.response.use(
       error.response?.status !== 401 ||
       originalRequest._retry ||
       originalRequest._skipRefresh ||
-      originalRequest.url === AUTH_ENDPOINTS.REFRESH
+      originalRequest.url === AUTH_ENDPOINTS.REFRESH ||
+      originalRequest.url === AUTH_ENDPOINTS.LOGIN
     ) {
       return Promise.reject(error);
     }
