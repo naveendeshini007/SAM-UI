@@ -5,6 +5,8 @@ import { FilterBar } from '../components/FilterBar';
 import { OrganizationsTable } from '../components/OrganizationsTable';
 import { fetchTableHeaders, fetchOrganizations } from '../services/organizationService';
 import type { TableHeader, Organization, FilterParams, PaginatedResponse } from '../types/Interfaces';
+import { SamDownload } from "../components/SamDataDownload";
+import { ToastContainer } from "react-toastify";
 
 const TABLE_NAME = 'organizations';
 
@@ -20,11 +22,12 @@ export default function Organizations() {
   const [response, setResponse] = useState<PaginatedResponse<Organization> | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchInput, setSearchInput] = useState('');  
-  const [searchTerm, setSearchTerm] = useState('');   
+  const [searchInput, setSearchInput] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<FilterParams>(INITIAL_FILTERS);
   const [page, setPage] = useState(INITIAL_PAGE);
   const [limit, setLimit] = useState(INITIAL_LIMIT);
+  const [showDownload, setShowDownload] = useState(false);
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -154,32 +157,46 @@ export default function Organizations() {
           )}
 
           {/* ── Search Bar ───────────────────────────────────────────────── */}
-          <div className="relative max-w-xl">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300">
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="search"
-              placeholder="Search by name, DUNS…"
-              className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium text-gray-700 placeholder:text-gray-300"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              aria-label="Search organizations"
-            />
-            {searchInput && (
-              <button
-                onClick={() => setSearchInput('')}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-300 hover:text-gray-500 transition-colors"
-                aria-label="Clear search"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+          <div className="flex items-center gap-3 w-full">
+
+            {/* Search Bar */}
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-              </button>
-            )}
+              </div>
+
+              <input
+                type="search"
+                placeholder="Search by name, DUNS…"
+                className="block w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm font-medium text-gray-700 placeholder:text-gray-300"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+              {searchInput && (
+                <button
+                  onClick={() => setSearchInput('')}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-300 hover:text-gray-500"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* Download Button */}
+            <button
+              onClick={() => setShowDownload(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium shadow-sm whitespace-nowrap"
+            >
+              Download
+            </button>
+
           </div>
+
+
 
           {/* ── Filter Bar ───────────────────────────────────────────────── */}
           <FilterBar filters={filters} onChange={handleFilterChange} onReset={handleReset} />
@@ -198,6 +215,11 @@ export default function Organizations() {
           />
 
         </div>
+        <SamDownload
+          isOpen={showDownload}
+          onClose={() => setShowDownload(false)}
+        />
+        <ToastContainer position="top-right" />
       </main>
     </div>
   );

@@ -105,15 +105,16 @@ export default function ChangePasswordForm({
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <h2 className="text-xl font-semibold text-gray-800 mb-1">
-        {mode === "first-login" ? "Set Your New Password" : ""}
-      </h2>
-      {mode === "first-login" && (
-        <p className="text-sm text-gray-500 mb-5">
-          You must set a new password before continuing.
-        </p>
-      )}
-
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-gray-800 mb-1">
+          {mode === "first-login" ? "Set Your New Password" : ""}
+        </h2>
+        {mode === "first-login" && (
+          <p className="text-sm text-gray-500 mb-5">
+            You must set a new password before continuing.
+          </p>
+        )}
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         {/* Old / Temporary Password */}
         <div>
